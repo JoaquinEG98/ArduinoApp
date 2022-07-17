@@ -123,6 +123,7 @@ namespace ArduinoApp
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
+            timerEncendido.Stop();
             IsClosed = true;
             if (ArduinoPort.IsOpen) ArduinoPort.Close();
         }
