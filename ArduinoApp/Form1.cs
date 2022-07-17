@@ -16,11 +16,14 @@ namespace ArduinoApp
 {
     public partial class Form1 : Form
     {
+        #region Variables
         SerialPort ArduinoPort;
         bool IsClosed = true;
         List<HumedadDTO> humedades;
         Thread hilo;
         System.Timers.Timer timerEncendido;
+
+        #endregion
 
         public Form1()
         {
@@ -36,6 +39,102 @@ namespace ArduinoApp
             ConectarArduino();
         }
 
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            try
+            {
+                hilo = new Thread(GetHumedad);
+                hilo.Start();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        #region Métodos
+        private void GetHumedad()
+        {
+            while (!IsClosed)
+            {
+                try
+                {
+                    string cadena = ArduinoPort.ReadLine();
+
+                    if (cadena != null)
+                    {
+                        btnEncender.Invoke(new MethodInvoker(delegate
+                        {
+                            humedades.Add(HumedadDTO.FillObject(cadena));
+                            CargarGrid();
+                        }));
+                    }
+                }
+                catch { }
+            }
+        }
+        #endregion
+
+        #region Botones
+        private void btnEncender_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                IsClosed = false;
+
+                if (hilo.ThreadState == ThreadState.Stopped)
+                {
+                    hilo = new Thread(GetHumedad);
+                    hilo.Start();
+                }
+
+                timerEncendido.Start();
+                CambiarLabelEstado(true);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+
+
+        private void btnApagar_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                IsClosed = true;
+
+                if (hilo.ThreadState == ThreadState.Running) hilo.Abort();
+
+                timerEncendido.Stop();
+
+                humedades = new List<HumedadDTO>();
+                LimpiarDataGrid();
+                CambiarLabelEstado(false);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        #endregion
+
+        #region Eventos
+        private void TimerEncendido_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            ArduinoPort.Write("a");
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            timerEncendido.Stop();
+            IsClosed = true;
+            if (ArduinoPort.IsOpen) ArduinoPort.Close();
+        }
+        #endregion
+
+        #region Tools
         private void ConectarArduino()
         {
             ArduinoPort = new SerialPort();
@@ -60,93 +159,6 @@ namespace ArduinoApp
             timerEncendido.Interval = int.Parse(ConfigurationManager.AppSettings["IntervaloHumedad"]);
             timerEncendido.Enabled = true;
             timerEncendido.Elapsed += TimerEncendido_Elapsed;
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            try
-            {
-                hilo = new Thread(GetHumedad);
-                hilo.Start();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
-        private void btnEncender_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                IsClosed = false;
-
-                if (hilo.ThreadState == ThreadState.Stopped)
-                {
-                    hilo = new Thread(GetHumedad);
-                    hilo.Start();
-                }
-
-                timerEncendido.Start();
-                CambiarLabelEstado(true);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
-
-        private void TimerEncendido_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
-        {
-            ArduinoPort.Write("a");
-        }
-
-        private void btnApagar_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                IsClosed = true;
-
-                if (hilo.ThreadState == ThreadState.Running) hilo.Abort();
-
-                timerEncendido.Stop();
-
-                humedades = new List<HumedadDTO>();
-                LimpiarDataGrid();
-                CambiarLabelEstado(false);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
-
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            timerEncendido.Stop();
-            IsClosed = true;
-            if (ArduinoPort.IsOpen) ArduinoPort.Close();
-        }
-
-        private void GetHumedad()
-        {
-            while (!IsClosed)
-            {
-                try
-                {
-                    string cadena = ArduinoPort.ReadLine();
-
-                    if (cadena != null)
-                    {
-                        btnEncender.Invoke(new MethodInvoker(delegate
-                        {
-                            humedades.Add(HumedadDTO.FillObject(cadena));
-                            CargarGrid();
-                        }));
-                    }
-                }
-                catch { }
-            }
         }
 
         private void CargarGrid()
@@ -175,5 +187,6 @@ namespace ArduinoApp
                     break;
             }
         }
+        #endregion
     }
 }
