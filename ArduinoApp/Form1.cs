@@ -17,7 +17,7 @@ namespace ArduinoApp
     public partial class Form1 : Form
     {
         SerialPort ArduinoPort;
-        bool IsClosed = false;
+        bool IsClosed = true;
         List<HumedadDTO> humedades;
         Thread hilo;
         System.Timers.Timer timerEncendido;

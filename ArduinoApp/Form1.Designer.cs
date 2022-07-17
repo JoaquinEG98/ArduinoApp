@@ -38,7 +38,7 @@
             // 
             // btnEncender
             // 
-            this.btnEncender.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
+            this.btnEncender.BackColor = System.Drawing.Color.PaleGreen;
             this.btnEncender.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnEncender.Font = new System.Drawing.Font("Cascadia Mono", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnEncender.Location = new System.Drawing.Point(12, 68);
@@ -51,7 +51,7 @@
             // 
             // btnApagar
             // 
-            this.btnApagar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
+            this.btnApagar.BackColor = System.Drawing.Color.PaleGreen;
             this.btnApagar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnApagar.Font = new System.Drawing.Font("Cascadia Mono", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnApagar.Location = new System.Drawing.Point(12, 114);
