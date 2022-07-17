@@ -73,6 +73,38 @@ namespace ArduinoApp
                 catch { }
             }
         }
+
+        private void ConectarArduino()
+        {
+            ArduinoPort = new SerialPort();
+            ArduinoPort.PortName = ConfigurationManager.AppSettings["PuertoArduino"];
+            ArduinoPort.BaudRate = int.Parse(ConfigurationManager.AppSettings["BaudRate"]);
+            ArduinoPort.DtrEnable = true;
+            ArduinoPort.ReadTimeout = int.Parse(ConfigurationManager.AppSettings["IntervaloTimeout"]);
+
+            try
+            {
+                ArduinoPort.Open();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        private void ApagarArduino()
+        {
+            timerEncendido.Stop();
+            timerEncendido.Dispose();
+
+            if (hilo.ThreadState == ThreadState.Running) hilo.Abort();
+            IsClosed = true;
+            if (ArduinoPort.IsOpen)
+            {
+                ArduinoPort.Write("b");
+                ArduinoPort.Close();
+            }
+        }
         #endregion
 
         #region Botones
@@ -103,10 +135,9 @@ namespace ArduinoApp
         {
             try
             {
+                ArduinoPort.Write("b");
                 IsClosed = true;
-
                 if (hilo.ThreadState == ThreadState.Running) hilo.Abort();
-
                 timerEncendido.Stop();
 
                 humedades = new List<HumedadDTO>();
@@ -126,38 +157,24 @@ namespace ArduinoApp
             ArduinoPort.Write("a");
         }
 
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            ApagarArduino();
+            System.Environment.Exit(0);
+        }
+
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            timerEncendido.Stop();
-            IsClosed = true;
-            if (ArduinoPort.IsOpen) ArduinoPort.Close();
+            ApagarArduino();
         }
         #endregion
 
         #region Tools
-        private void ConectarArduino()
-        {
-            ArduinoPort = new SerialPort();
-            ArduinoPort.PortName = ConfigurationManager.AppSettings["PuertoArduino"];
-            ArduinoPort.BaudRate = int.Parse(ConfigurationManager.AppSettings["BaudRate"]);
-            ArduinoPort.DtrEnable = true;
-            ArduinoPort.ReadTimeout = int.Parse(ConfigurationManager.AppSettings["IntervaloTimeout"]);
-
-            try
-            {
-                ArduinoPort.Open();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
-
         private void ConfigurarTimer()
         {
             timerEncendido = new System.Timers.Timer();
             timerEncendido.Interval = int.Parse(ConfigurationManager.AppSettings["IntervaloHumedad"]);
-            timerEncendido.Enabled = true;
+            timerEncendido.Enabled = false;
             timerEncendido.Elapsed += TimerEncendido_Elapsed;
         }
 
