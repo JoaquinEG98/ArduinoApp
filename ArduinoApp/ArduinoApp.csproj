@@ -47,15 +47,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Conexion\Cloud\Acceso.cs" />
+    <Compile Include="Conexion\Cloud\Conexion.cs" />
+    <Compile Include="Conexion\Local\Acceso.cs" />
+    <Compile Include="Conexion\Local\Conexion.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Models\HumedadDTO.cs" />
+    <Compile Include="Models\DTOs\DatosNoSubidosDTO.cs" />
+    <Compile Include="Models\Humedad.cs" />
+    <Compile Include="Models\DTOs\HumedadDTO.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\CloudService.cs" />
+    <Compile Include="Services\LocalService.cs" />
+    <Compile Include="Tools\Fill.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -81,5 +90,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

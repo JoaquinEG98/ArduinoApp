@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ArduinoApp.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,7 +17,11 @@ namespace ArduinoApp
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+
+            LocalService localService = new LocalService();
+            CloudService cloudService = new CloudService();
+
+            Application.Run(new Form1(localService, cloudService));
         }
     }
 }

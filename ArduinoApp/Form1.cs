@@ -11,6 +11,8 @@ using System.IO.Ports;
 using System.Threading;
 using ArduinoApp.Models;
 using System.Configuration;
+using ArduinoApp.Services;
+using ArduinoApp.Models.DTOs;
 
 namespace ArduinoApp
 {
@@ -22,12 +24,17 @@ namespace ArduinoApp
         List<HumedadDTO> humedades;
         Thread hilo;
         System.Timers.Timer timerEncendido;
+        private readonly LocalService _localService;
+        private readonly CloudService _cloudService;
 
         #endregion
 
-        public Form1()
+        public Form1(LocalService localService, CloudService cloudService)
         {
             InitializeComponent();
+
+            _localService = localService;
+            _cloudService = cloudService;
 
             this.FormClosing += Form1_FormClosing;
             this.btnEncender.Click += btnEncender_Click;
@@ -43,6 +50,8 @@ namespace ArduinoApp
         {
             try
             {
+                CargarGridDatosNoSubidos();
+
                 hilo = new Thread(GetHumedad);
                 hilo.Start();
             }
@@ -65,8 +74,11 @@ namespace ArduinoApp
                     {
                         btnEncender.Invoke(new MethodInvoker(delegate
                         {
-                            humedades.Add(HumedadDTO.FillObject(cadena));
-                            CargarGrid();
+                            HumedadDTO humedad = HumedadDTO.FillObject(cadena);
+                            humedades.Add(humedad);
+                            CargarGridDatosCapturados();
+                            _localService.InsertarLocal(humedad);
+                            CargarGridDatosNoSubidos();
                         }));
                     }
                 }
@@ -141,7 +153,7 @@ namespace ArduinoApp
                 timerEncendido.Stop();
 
                 humedades = new List<HumedadDTO>();
-                LimpiarDataGrid();
+                LimpiarGridDatosCapturados();
                 CambiarLabelEstado(false);
             }
             catch (Exception ex)
@@ -178,16 +190,22 @@ namespace ArduinoApp
             timerEncendido.Elapsed += TimerEncendido_Elapsed;
         }
 
-        private void CargarGrid()
+        private void CargarGridDatosCapturados()
         {
-            LimpiarDataGrid();
-            dataGridView1.DataSource = humedades;
+            LimpiarGridDatosCapturados();
+            dataGridDatosCapturados.DataSource = humedades;
         }
 
-        private void LimpiarDataGrid()
+        private void LimpiarGridDatosCapturados()
         {
-            dataGridView1.DataSource = null;
-            dataGridView1.Rows.Clear();
+            dataGridDatosCapturados.DataSource = null;
+            dataGridDatosCapturados.Rows.Clear();
+        }
+
+        private void CargarGridDatosNoSubidos()
+        {
+            dataGridDatosNoSubidos.DataSource = DatosNoSubidosDTO.FillListDTO(_localService.ObtenerNoSubidos());
+            dataGridDatosNoSubidos.Columns["Id"].Visible = false;
         }
 
         private void CambiarLabelEstado(bool estado)

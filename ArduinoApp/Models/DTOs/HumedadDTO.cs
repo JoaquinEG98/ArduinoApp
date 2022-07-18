@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ArduinoApp.Models
+namespace ArduinoApp.Models.DTOs
 {
     public class HumedadDTO
     {
