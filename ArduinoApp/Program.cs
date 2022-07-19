@@ -19,9 +19,8 @@ namespace ArduinoApp
             Application.SetCompatibleTextRenderingDefault(false);
 
             LocalService localService = new LocalService();
-            CloudService cloudService = new CloudService();
 
-            Application.Run(new Form1(localService, cloudService));
+            Application.Run(new Form1(localService));
         }
     }
 }

@@ -14,10 +14,12 @@ namespace ArduinoApp.Services
     {
         #region Inyección de dependencias
         private readonly Fill _fill;
+        private readonly CloudService _cloudService;
 
         public LocalService()
         {
             _fill = new Fill();
+            _cloudService = new CloudService();
         }
         #endregion
 
@@ -50,7 +52,7 @@ namespace ArduinoApp.Services
             }
         }
 
-        public int MarcarSubido(int id)
+        public int MarcarSubido(Humedad humedad)
         {
             try
             {
@@ -58,9 +60,15 @@ namespace ArduinoApp.Services
 
                 ExecuteParameters.Parameters.Clear();
 
-                ExecuteParameters.Parameters.AddWithValue("@parId", id);
+                ExecuteParameters.Parameters.AddWithValue("@parId", humedad.Id);
 
-                return ExecuteNonEscalar();
+                int idSubido = ExecuteNonEscalar();
+                if (idSubido > 0)
+                {
+                    _cloudService.Insertar(humedad);
+                }
+
+                return idSubido;
             }
             catch
             {

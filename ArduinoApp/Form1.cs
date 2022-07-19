@@ -24,17 +24,16 @@ namespace ArduinoApp
         List<HumedadDTO> humedades;
         Thread hilo;
         System.Timers.Timer timerEncendido;
+        System.Timers.Timer timerCloud;
         private readonly LocalService _localService;
-        private readonly CloudService _cloudService;
 
         #endregion
 
-        public Form1(LocalService localService, CloudService cloudService)
+        public Form1(LocalService localService)
         {
             InitializeComponent();
 
             _localService = localService;
-            _cloudService = cloudService;
 
             this.FormClosing += Form1_FormClosing;
             this.btnEncender.Click += btnEncender_Click;
@@ -108,6 +107,8 @@ namespace ArduinoApp
         {
             timerEncendido.Stop();
             timerEncendido.Dispose();
+            timerCloud.Stop();
+            timerCloud.Dispose();
 
             if (hilo.ThreadState == ThreadState.Running) hilo.Abort();
             IsClosed = true;
@@ -169,6 +170,20 @@ namespace ArduinoApp
             ArduinoPort.Write("a");
         }
 
+        private void TimerCloud_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            List<Humedad> humedades = _localService.ObtenerNoSubidos();
+
+            if (humedades.Count > 0)
+            {
+                foreach (Humedad humedad in humedades)
+                {
+                    _localService.MarcarSubido(humedad);
+                }
+                CargarGridDatosNoSubidos();
+            }
+        }
+
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
             ApagarArduino();
@@ -188,6 +203,12 @@ namespace ArduinoApp
             timerEncendido.Interval = int.Parse(ConfigurationManager.AppSettings["IntervaloHumedad"]);
             timerEncendido.Enabled = false;
             timerEncendido.Elapsed += TimerEncendido_Elapsed;
+
+            timerCloud = new System.Timers.Timer();
+            timerCloud.Interval = int.Parse(ConfigurationManager.AppSettings["IntervaloCloud"]);
+            timerCloud.Enabled = false;
+            timerCloud.Start();
+            timerCloud.Elapsed += TimerCloud_Elapsed;
         }
 
         private void CargarGridDatosCapturados()
