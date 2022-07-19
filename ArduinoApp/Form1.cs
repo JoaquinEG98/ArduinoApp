@@ -180,8 +180,9 @@ namespace ArduinoApp
                 {
                     _localService.MarcarSubido(humedad);
                 }
-                CargarGridDatosNoSubidos();
             }
+
+            CargarGridDatosNoSubidos();
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
@@ -225,8 +226,23 @@ namespace ArduinoApp
 
         private void CargarGridDatosNoSubidos()
         {
-            dataGridDatosNoSubidos.DataSource = DatosNoSubidosDTO.FillListDTO(_localService.ObtenerNoSubidos());
-            dataGridDatosNoSubidos.Columns["Id"].Visible = false;
+            dataGridDatosNoSubidos.Invoke(new MethodInvoker(delegate
+            {
+                LimpiarGridDatosNoSubidos();
+                List<Humedad> NoSubidos = _localService.ObtenerNoSubidos();
+
+                if (NoSubidos.Count > 0)
+                {
+                    dataGridDatosNoSubidos.DataSource = DatosNoSubidosDTO.FillListDTO(NoSubidos);
+                    dataGridDatosNoSubidos.Columns["Id"].Visible = false;
+                }
+            }));
+        }
+
+        private void LimpiarGridDatosNoSubidos()
+        {
+            dataGridDatosNoSubidos.DataSource = null;
+            dataGridDatosNoSubidos.Rows.Clear();
         }
 
         private void CambiarLabelEstado(bool estado)

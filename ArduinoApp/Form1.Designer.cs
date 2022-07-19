@@ -73,7 +73,7 @@
             this.dataGridDatosCapturados.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridDatosCapturados.Location = new System.Drawing.Point(240, 68);
             this.dataGridDatosCapturados.Name = "dataGridDatosCapturados";
-            this.dataGridDatosCapturados.Size = new System.Drawing.Size(314, 239);
+            this.dataGridDatosCapturados.Size = new System.Drawing.Size(360, 239);
             this.dataGridDatosCapturados.TabIndex = 3;
             // 
             // label1
@@ -114,7 +114,7 @@
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Cascadia Code", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.Color.PaleGreen;
-            this.label3.Location = new System.Drawing.Point(571, 31);
+            this.label3.Location = new System.Drawing.Point(601, 31);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(199, 25);
             this.label3.TabIndex = 8;
@@ -125,9 +125,9 @@
             this.dataGridDatosNoSubidos.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.dataGridDatosNoSubidos.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
             this.dataGridDatosNoSubidos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridDatosNoSubidos.Location = new System.Drawing.Point(576, 68);
+            this.dataGridDatosNoSubidos.Location = new System.Drawing.Point(606, 68);
             this.dataGridDatosNoSubidos.Name = "dataGridDatosNoSubidos";
-            this.dataGridDatosNoSubidos.Size = new System.Drawing.Size(351, 239);
+            this.dataGridDatosNoSubidos.Size = new System.Drawing.Size(360, 239);
             this.dataGridDatosNoSubidos.TabIndex = 7;
             // 
             // Form1
@@ -135,7 +135,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
-            this.ClientSize = new System.Drawing.Size(939, 357);
+            this.ClientSize = new System.Drawing.Size(973, 352);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.dataGridDatosNoSubidos);
             this.Controls.Add(this.label2);
@@ -144,7 +144,10 @@
             this.Controls.Add(this.dataGridDatosCapturados);
             this.Controls.Add(this.btnApagar);
             this.Controls.Add(this.btnEncender);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
+            this.MaximizeBox = false;
             this.Name = "Form1";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Sensor de humedad";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
