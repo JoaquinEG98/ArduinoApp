@@ -143,7 +143,6 @@ namespace ArduinoApp
         }
 
 
-
         private void btnApagar_Click(object sender, EventArgs e)
         {
             try
